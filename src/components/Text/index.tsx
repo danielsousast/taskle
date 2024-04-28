@@ -6,6 +6,7 @@ interface RNTextProps {
   fontSize?: number;
   colorStyle?: 'white' | 'black';
   center?: boolean;
+  marginBottom?: number;
 }
 
 export const RNText = styled.Text<RNTextProps>`
@@ -13,6 +14,7 @@ export const RNText = styled.Text<RNTextProps>`
   font-weight: ${props => (props.bold ? 'bold' : 'normal')};
   color: ${props => (props.colorStyle === 'white' ? 'white' : 'black')};
   text-align: ${props => (props.center ? 'center' : 'left')};
+  margin-bottom: ${props => props.marginBottom || 0}px;
 `;
 
 interface Props extends RNTextProps {
@@ -25,9 +27,11 @@ export function Text({
   fontSize = 15,
   colorStyle = 'black',
   center = false,
+  ...rest
 }: Props) {
   return (
     <RNText
+      {...rest}
       bold={bold}
       center={center}
       fontSize={fontSize}

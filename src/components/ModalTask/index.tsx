@@ -7,6 +7,7 @@ import {Button} from '../Button';
 import {Input} from '../Input';
 import {Switch} from 'react-native';
 import {useAddTask} from '../../features/task/hooks/useAddTask';
+import {TimePicker} from '../TimePicker';
 
 interface ModalTaskProps {
   onRequestClose: () => void;
@@ -19,8 +20,10 @@ export function ModalTask({
   onSubmitted,
   onRequestClose,
 }: ModalTaskProps) {
+  const [isTimePickerVisible, setTimePickerVisible] = React.useState(false);
   const [title, setTitle] = React.useState('');
   const [today, setToday] = React.useState(true);
+  const [time, setTime] = React.useState('14:00');
   const {addTask} = useAddTask({
     onSucess: () => {
       onSubmitted();
@@ -29,6 +32,7 @@ export function ModalTask({
   });
 
   function handleAddTask() {
+    if (!title) return;
     addTask({
       title,
       today,
@@ -63,8 +67,8 @@ export function ModalTask({
           style={{
             marginVertical: 10,
           }}>
-          <S.TimeButton>
-            <Text fontSize={16}>18:00</Text>
+          <S.TimeButton onPress={() => setTimePickerVisible(true)}>
+            <Text fontSize={16}>{time}</Text>
           </S.TimeButton>
 
           <Switch
@@ -77,6 +81,11 @@ export function ModalTask({
         </S.Row>
         <Button onPress={handleAddTask} />
       </S.Container>
+      <TimePicker
+        onSelectTime={setTime}
+        isVisible={isTimePickerVisible}
+        onRequestedClose={() => setTimePickerVisible(false)}
+      />
     </Modal>
   );
 }
