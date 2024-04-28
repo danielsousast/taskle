@@ -6,13 +6,35 @@ import {Text} from '../Text';
 import {Button} from '../Button';
 import {Input} from '../Input';
 import {Switch} from 'react-native';
+import {useAddTask} from '../../features/task/hooks/useAddTask';
 
 interface ModalTaskProps {
   onRequestClose: () => void;
+  onSubmitted: () => void;
   isVisible: boolean;
 }
 
-export function ModalTask({isVisible, onRequestClose}: ModalTaskProps) {
+export function ModalTask({
+  isVisible,
+  onSubmitted,
+  onRequestClose,
+}: ModalTaskProps) {
+  const [title, setTitle] = React.useState('');
+  const [today, setToday] = React.useState(true);
+  const {addTask} = useAddTask({
+    onSucess: () => {
+      onSubmitted();
+      onRequestClose();
+    },
+  });
+
+  function handleAddTask() {
+    addTask({
+      title,
+      today,
+    });
+  }
+
   return (
     <Modal
       isVisible={isVisible}
@@ -28,7 +50,7 @@ export function ModalTask({isVisible, onRequestClose}: ModalTaskProps) {
         <Text bold fontSize={24} center>
           Add task
         </Text>
-        <Input label="Description" placeholder="Task" />
+        <Input label="Description" placeholder="Task" onChangeText={setTitle} />
         <S.Row>
           <Text bold fontSize={16}>
             Hour
@@ -46,12 +68,14 @@ export function ModalTask({isVisible, onRequestClose}: ModalTaskProps) {
           </S.TimeButton>
 
           <Switch
+            value={today}
+            onChange={() => setToday(!today)}
             style={{
               transform: [{scaleX: 0.9}, {scaleY: 0.9}],
             }}
           />
         </S.Row>
-        <Button onPress={onRequestClose} />
+        <Button onPress={handleAddTask} />
       </S.Container>
     </Modal>
   );

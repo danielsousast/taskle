@@ -4,80 +4,22 @@ import {FloatButton, Text} from '../../components';
 import {SectionList, SectionListRenderItemInfo} from 'react-native';
 import {TaskItem} from '../../components/TaskItem';
 import {ModalTask} from '../../components/ModalTask';
-
-const tasks = [
-  {
-    id: 1,
-    title: 'Buy a bread',
-    done: false,
-  },
-  {
-    id: 2,
-    title: 'Buy a milk',
-    done: false,
-  },
-  {
-    id: 3,
-    title: 'Buy a butter',
-    done: false,
-  },
-];
-
-const tasks2 = [
-  {
-    id: 4,
-    title: 'Buy a bread',
-    done: false,
-  },
-  {
-    id: 5,
-    title: 'Buy a milk',
-    done: false,
-  },
-  {
-    id: 6,
-    title: 'Buy a butter',
-    done: false,
-  },
-];
-
-const sectionsFake = [
-  {
-    title: 'Today',
-    data: tasks,
-  },
-  {
-    title: 'Tomorrow',
-    data: tasks2,
-  },
-];
+import {useListTasks} from '../../features/task/hooks/useListTasks';
+import {Task} from '../../features/task/interfaces';
+import {useToggleTask} from '../../features/task/hooks/useToggleTask';
 
 export function HomeScreen() {
+  const {tasks, getTaks} = useListTasks();
+  const {toggleTask} = useToggleTask({
+    onSucess: getTaks,
+  });
   const [showModal, setShowModal] = React.useState(false);
-  const [sections, setSections] = React.useState(sectionsFake);
 
-  function handlePressTask(taskId: number) {
-    const newSections = sections.map(section => ({
-      ...section,
-      data: section.data.map(task =>
-        task.id === taskId ? {...task, done: !task.done} : task,
-      ),
-    }));
-
-    setSections(newSections);
-  }
-
-  function renderItem({
-    item,
-  }: SectionListRenderItemInfo<{
-    id: number;
-    title: string;
-    done: boolean;
-  }>) {
+  function renderItem({item}: SectionListRenderItemInfo<Task>) {
     return (
       <TaskItem
-        value={item.done}
-        onValueChange={() => handlePressTask(item.id)}
+        value={item.completed}
+        onValueChange={() => toggleTask(item.id)}
         item={item}
       />
     );
@@ -94,13 +36,14 @@ export function HomeScreen() {
               </Text>
             </S.SectionHeaderWrapper>
           )}
-          sections={sections}
+          sections={tasks}
           renderItem={renderItem}
         />
       </S.Content>
       <FloatButton onPress={() => setShowModal(true)} />
       <ModalTask
         isVisible={showModal}
+        onSubmitted={getTaks}
         onRequestClose={() => setShowModal(false)}
       />
     </S.Container>

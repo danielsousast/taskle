@@ -2,15 +2,12 @@
 import React from 'react';
 import * as S from './styles';
 import CheckBox from '@react-native-community/checkbox';
+import {Task} from '../../features/task/interfaces';
 
 interface TaskItemProps {
   value: boolean;
   onValueChange: (newValue: boolean) => void;
-  item: {
-    id: number;
-    title: string;
-    done: boolean;
-  };
+  item: Task;
 }
 
 export function TaskItem({value, onValueChange, item}: TaskItemProps) {
