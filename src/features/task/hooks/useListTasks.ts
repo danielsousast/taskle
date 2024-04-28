@@ -15,6 +15,19 @@ export function useListTasks() {
   function getTaks() {
     try {
       const storagedTasks = commonStorage.get<Task[]>('tasks');
+
+      if (!storagedTasks) {
+        return setTasks([
+          {
+            title: 'Today',
+            data: [],
+          },
+          {
+            title: 'Tomorrow',
+            data: [],
+          },
+        ]);
+      }
       let todayTasks = [] as Task[];
       let tomorrowTasks = [] as Task[];
 

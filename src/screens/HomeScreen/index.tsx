@@ -1,15 +1,22 @@
 import React from 'react';
 import * as S from './styles';
-import {FloatButton, Text} from '../../components';
+import {FloatButton, Text} from '@/components';
 import {SectionList, SectionListRenderItemInfo} from 'react-native';
-import {TaskItem} from '../../components/TaskItem';
-import {ModalTask} from '../../components/ModalTask';
-import {useListTasks} from '../../features/task/hooks/useListTasks';
-import {Task} from '../../features/task/interfaces';
-import {useToggleTask} from '../../features/task/hooks/useToggleTask';
+import {TaskItem} from '@/components/TaskItem';
+import {ModalTask} from '@/components/ModalTask';
+import {
+  useDeleteTask,
+  useToggleTask,
+  useListTasks,
+  Task,
+} from '@/features/task';
 
 export function HomeScreen() {
   const {tasks, getTaks} = useListTasks();
+  const {deleteTask} = useDeleteTask({
+    onSucess: getTaks,
+  });
+
   const {toggleTask} = useToggleTask({
     onSucess: getTaks,
   });
@@ -18,6 +25,7 @@ export function HomeScreen() {
   function renderItem({item}: SectionListRenderItemInfo<Task>) {
     return (
       <TaskItem
+        onDeletePress={() => deleteTask(item.id)}
         value={item.completed}
         onValueChange={() => toggleTask(item.id)}
         item={item}

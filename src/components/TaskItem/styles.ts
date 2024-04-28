@@ -20,3 +20,12 @@ export const TaskText = styled.Text<{selected?: boolean}>`
   font-size: 16px;
   flex: 1;
 `;
+
+export const DeleteButton = styled.TouchableOpacity`
+  background-color: #f00;
+  padding: 10px 16px;
+  justify-content: center;
+  align-items: center;
+  margin-right: 8px;
+  border-radius: 4px;
+`;

@@ -16,8 +16,15 @@ async function udapteAll(tasks: Task[]) {
   return commonStorage.set('tasks', tasks);
 }
 
+async function remove(taskId: string) {
+  const tasks = commonStorage.get<Task[]>('tasks');
+  const newTasks = tasks.filter(task => task.id !== taskId);
+  commonStorage.set('tasks', newTasks);
+}
+
 export const taskServices = {
   add,
   list,
   udapteAll,
+  remove,
 };
